@@ -31,7 +31,7 @@ fn test_round_trip_random_ish() {
         data.push((i % 256) as u8);
     }
 
-    // Add some repetition to ensure compression happens.
+    // Add some repetition to ensure compression happens
     for _ in 0..100 {
         data.extend_from_slice(b"repeated pattern here ");
     }
@@ -43,7 +43,7 @@ fn test_round_trip_random_ish() {
 
 #[test]
 fn test_large_file() {
-    // 1MB of data.
+    // 1MB of data
     let mut data = Vec::with_capacity(1024 * 1024);
     for i in 0..(1024 * 1024) {
         data.push(((i * 7) % 256) as u8);
@@ -56,6 +56,6 @@ fn test_large_file() {
 
 #[test]
 fn test_invalid_header() {
-    let data = vec![0, 0, 0]; // Too short.
+    let data = vec![0, 0, 0]; // Too short
     assert!(decompress(&data).is_err());
 }

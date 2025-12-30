@@ -116,7 +116,7 @@ impl Command {
                     )));
                 }
 
-                // Caller is responsible for writing the raw data after this command byte.
+                // Caller is responsible for writing the raw data after this command byte
                 output.push(COMMAND_RAW_COPY_START | (length as u8 & COMMAND_RAW_COPY_LENGTH_MASK));
             }
             Command::Rle { value, length } => {
@@ -197,7 +197,7 @@ mod tests {
             length: 4,
         };
         cmd.encode(&mut out).unwrap();
-        // 4 - 2 = 2. Short Zero Start 0xE0. 0xE0 | 2 = 0xE2.
+        // 4 - 2 = 2. Short Zero Start 0xE0. 0xE0 | 2 = 0xE2
         assert_eq!(out, vec![0xE2]);
     }
 }

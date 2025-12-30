@@ -26,7 +26,7 @@ pub enum Lzkn64Error {
     CompressionError(String),
 }
 
-// Map Rust errors to Python exceptions.
+// Map Rust errors to Python exceptions
 impl From<Lzkn64Error> for PyErr {
     fn from(err: Lzkn64Error) -> PyErr {
         PyValueError::new_err(err.to_string())

@@ -12,12 +12,12 @@ pub fn decompress(input: &[u8]) -> Result<Vec<u8>, Lzkn64Error> {
     let mut output = Vec::with_capacity(input.len() * 3); // Estimate capacity
 
     while !reader.is_empty() {
-        // Check for header availability.
+        // Check for header availability
         if reader.remaining() < LZKN64_HEADER_SIZE {
-            break; // No more complete chunks.
+            break; // No more complete chunks
         }
 
-        // Read chunk header.
+        // Read chunk header
         let chunk_header = reader.read_be32()?;
 
         let plane_count = ((chunk_header >> LZKN64_PLANE_COUNT_SHIFT) & 0x0F) + 1;
@@ -27,14 +27,14 @@ pub fn decompress(input: &[u8]) -> Result<Vec<u8>, Lzkn64Error> {
 
         let chunk_size = (chunk_header & LZKN64_CHUNK_SIZE_MASK) as usize;
 
-        // Validate chunk size.
-        // We know we read 4 bytes, so chunk_size must be at least 4.
+        // Validate chunk size
+        // We know we read 4 bytes, so chunk_size must be at least 4
         if chunk_size < LZKN64_HEADER_SIZE {
             return Err(Lzkn64Error::InvalidHeader);
         }
 
-        // chunk_size includes the header (4 bytes) we just read.
-        // We need to verify that we have enough bytes remaining in the input for the rest (body) of the chunk.
+        // chunk_size includes the header (4 bytes) we just read
+        // We need to verify that we have enough bytes remaining in the input for the rest (body) of the chunk
         let body_size = chunk_size - LZKN64_HEADER_SIZE;
         if reader.remaining() < body_size {
             return Err(Lzkn64Error::InvalidHeader);
@@ -43,7 +43,7 @@ pub fn decompress(input: &[u8]) -> Result<Vec<u8>, Lzkn64Error> {
         let chunk_body = reader.read_slice(body_size)?;
 
         if body_size == 0 {
-            continue; // Empty chunk.
+            continue; // Empty chunk
         }
 
         decompress_chunk(chunk_body, &mut output)?;
