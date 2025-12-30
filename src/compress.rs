@@ -236,7 +236,7 @@ fn emit_pending_raw_copy(
         let cmd = Command::Raw { length: chunk_size };
         cmd.encode(output)?;
 
-        // Output raw bytes.
+        // Output raw bytes
         output.extend_from_slice(&input[*last_processed..*last_processed + chunk_size]);
 
         // Update last processed position and remaining length
