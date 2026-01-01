@@ -12,21 +12,24 @@ pub use compress::compress;
 pub use decompress::decompress;
 pub use error::Lzkn64Error;
 
-#[pymodule]
-fn lzkn64(_py: Python, m: &PyModule) -> PyResult<()> {
-    #[pyfn(m)]
-    #[pyo3(name = "compress")]
-    fn compress_py(py: Python, input: &[u8]) -> PyResult<PyObject> {
-        let compressed = compress(input).map_err(PyErr::from)?;
-        Ok(PyBytes::new(py, &compressed).into())
-    }
+#[pyfunction]
+#[pyo3(name = "compress")]
+fn compress_py<'py>(py: Python<'py>, input: &[u8]) -> PyResult<Bound<'py, PyBytes>> {
+    let compressed = compress(input)?;   
+    Ok(PyBytes::new(py, &compressed))
+}
 
-    #[pyfn(m)]
-    #[pyo3(name = "decompress")]
-    fn decompress_py(py: Python, input: &[u8]) -> PyResult<PyObject> {
-        let decompressed = decompress(input).map_err(PyErr::from)?;
-        Ok(PyBytes::new(py, &decompressed).into())
-    }
+#[pyfunction]
+#[pyo3(name = "decompress")]
+fn decompress_py<'py>(py: Python<'py>, input: &[u8]) -> PyResult<Bound<'py, PyBytes>> {
+    let decompressed = decompress(input)?;
+    Ok(PyBytes::new(py, &decompressed))
+}
+
+#[pymodule]
+fn lzkn64(m: &Bound<'_, PyModule>) -> PyResult<()> {
+    m.add_function(wrap_pyfunction!(compress_py, m)?)?;
+    m.add_function(wrap_pyfunction!(decompress_py, m)?)?;
 
     Ok(())
 }
