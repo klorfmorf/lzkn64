@@ -9,5 +9,5 @@ name = "lzkn64"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-pyo3 = { version = "0.20", features = ["extension-module"] }
+pyo3 = { version = "0.24", features = ["extension-module"] }
 thiserror = "1.0"
